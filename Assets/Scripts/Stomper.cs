@@ -6,10 +6,13 @@ using UnityEngine.InputSystem;
 public class Stomper : MonoBehaviour
 {
     [SerializeField]
-    float liftHeight;
+    float rotationForce;
 
     [SerializeField]
-    float rotationSpeed;
+    float liftForce;
+
+    [SerializeField]
+    float liftDot;
 
     [SerializeField]
     private Transform LeftLeg;
@@ -39,10 +42,12 @@ public class Stomper : MonoBehaviour
 
     private bool IsMoving => Mathf.Abs(pivotInput) > Mathf.Epsilon;
 
+    private float lastInput;
+
     private Transform lifted;
     private Transform liftedRestPoint;
+    private Transform liftedLiftPoint;
 
-    // Start is called before the first frame update
     void Start()
     {
         myTransform = GetComponent<Transform>();
@@ -52,30 +57,44 @@ public class Stomper : MonoBehaviour
 
     void FixedUpdate()
     {
-        //myRigidbody.isKinematic = IsMoving;
+
+        if(Vector3.Dot(myTransform.up, Vector3.up) < liftDot)
+        {
+            myRigidbody.AddForceAtPosition(Vector3.up * liftForce, myTransform.position);
+        }
 
         if(IsMoving)
         {
             bool pivotLeft = pivotInput < 0;
             var pivotPoint = pivotLeft ? LeftLeg : RightLeg;
             var reversed = reverseInput ? 1f : -1f;
-            myTransform.RotateAround(pivotPoint.position, pivotPoint.up, rotationSpeed * Time.deltaTime * Mathf.Sign(pivotInput) * reversed);
+            var pushPoint = pivotLeft ? RightLegRestPoint : LeftLegRestPoint;
+            myRigidbody.AddForceAtPosition(pushPoint.forward * rotationForce * reversed, pushPoint.position);
             if(lifted == null)
             {
                 lifted = pivotLeft ? RightLeg : LeftLeg;
                 var liftPosition = pivotLeft ? RightLegLiftPoint : LeftLegLiftPoint;
-                lifted.localPosition = liftPosition.localPosition;
                 liftedRestPoint = pivotLeft ? RightLegRestPoint : LeftLegRestPoint;
+                liftedLiftPoint = pivotLeft ? RightLegLiftPoint : LeftLegLiftPoint;
                 myRigidbody.centerOfMass = pivotPoint.localPosition;
             }
+            lifted.localPosition = Vector3.Lerp(lifted.localPosition, liftedLiftPoint.localPosition, .3f);
         } 
         else
         {
             if(lifted != null)
             {
-                lifted.localPosition = liftedRestPoint.localPosition;
-                lifted = null;
+                lifted.localPosition = Vector3.Lerp(lifted.localPosition, liftedRestPoint.localPosition, .3f);
+                if(Vector3.Distance(lifted.localPosition, liftedRestPoint.localPosition) < .05f)
+                {
+                    lifted.localPosition = liftedRestPoint.localPosition;
+                    lifted = null;
+                }
                 myRigidbody.centerOfMass = intialCenterofMass;
+            } else {
+                if(Mathf.Abs(lastInput) > Mathf.Epsilon){
+                    pivotInput = lastInput;
+                }
             }
         }
     }
@@ -87,7 +106,11 @@ public class Stomper : MonoBehaviour
     
     public void SetPivot(InputAction.CallbackContext context)
     {
-        pivotInput = context.ReadValue<float>();
+        lastInput = context.ReadValue<float>();
+        if(IsMoving && Mathf.Abs(lastInput) <= Mathf.Epsilon)
+        {
+            pivotInput = 0f;
+        }
     }
 
     public void SetReverse(InputAction.CallbackContext context)
