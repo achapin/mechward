@@ -15,6 +15,9 @@ public class Stomper : MonoBehaviour
     float liftDot;
 
     [SerializeField]
+    private Transform defaultCenterOfMass;
+
+    [SerializeField]
     private Transform LeftLeg;
 
     [SerializeField]
@@ -38,8 +41,6 @@ public class Stomper : MonoBehaviour
     private float pivotInput;
     private bool reverseInput = true;
 
-    private Vector3 intialCenterofMass;
-
     private bool IsMoving => Mathf.Abs(pivotInput) > Mathf.Epsilon;
 
     private float lastInput;
@@ -52,7 +53,7 @@ public class Stomper : MonoBehaviour
     {
         myTransform = GetComponent<Transform>();
         myRigidbody = GetComponent<Rigidbody>();
-        intialCenterofMass = myRigidbody.centerOfMass;
+        myRigidbody.centerOfMass = defaultCenterOfMass.localPosition;
     }
 
     void FixedUpdate()
@@ -90,7 +91,7 @@ public class Stomper : MonoBehaviour
                     lifted.localPosition = liftedRestPoint.localPosition;
                     lifted = null;
                 }
-                myRigidbody.centerOfMass = intialCenterofMass;
+                myRigidbody.centerOfMass = defaultCenterOfMass.localPosition;
             } else {
                 if(Mathf.Abs(lastInput) > Mathf.Epsilon){
                     pivotInput = lastInput;
