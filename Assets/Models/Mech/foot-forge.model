@@ -1,0 +1,19 @@
+# Made using Asset Forge (2.1.2)
+
+:materials
+
+[name:_defaultMat;color:RGBA(0.939, 0.953, 1.000, 1.000);scale:(1.0, 1.0);shader:Default;valueA:0.35;valueB:0.25;]
+[name:dark;color:RGBA(0.224, 0.235, 0.275, 1.000);scale:(1.0, 1.0);shader:Default;valueA:0.35;valueB:0;]
+[name:metalOrange;color:RGBA(1.000, 0.702, 0.000, 1.000);scale:(1.0, 1.0);shader:Default;valueA:0.5;valueB:0.2;]
+[name:stoneDark;color:RGBA(0.403, 0.390, 0.594, 1.000);scale:(1.0, 1.0);shader:Default;valueA:0.5;valueB:0;]
+[name:stone;color:RGBA(0.571, 0.559, 0.736, 1.000);scale:(1.0, 1.0);shader:Default;valueA:0.5;valueB:0;]
+
+:models
+
+[name:;collection:Mech;type:foot_claw;position:(0.0000, 0.0000, -0.4000);rotation:(0.0000, 0.0000, 0.0000);scale:(1.0000, 1.0000, 1.0000);group:;locked:False;hidden:False;materials:_defaultMat+dark+metalOrange;]
+[name:;collection:Mech;type:foot_claw;position:(0.0000, 0.0000, 0.4000);rotation:(0.0000, 0.0000, 0.0000);scale:(1.0000, 1.0000, 1.0000);group:;locked:False;hidden:False;materials:_defaultMat+dark+metalOrange;]
+[name:;collection:Mech;type:foot_claw;position:(0.4000, 0.0000, 0.0000);rotation:(0.0000, 270.0000, 0.0000);scale:(1.0000, 1.0000, 1.0000);group:;locked:False;hidden:False;materials:_defaultMat+dark+metalOrange;]
+[name:;collection:Mech;type:foot_claw;position:(-0.4000, 0.0000, 0.0000);rotation:(0.0000, 270.0000, 0.0000);scale:(1.0000, 1.0000, 1.0000);group:;locked:False;hidden:False;materials:_defaultMat+dark+metalOrange;]
+[name:;collection:Hexagons;type:hexagon_baseLarge%;position:(0.0000, 0.0000, 0.0000);rotation:(0.0000, 270.0000, 0.0000);scale:(0.7000, 0.6400, 0.7200);group:;locked:False;hidden:False;materials:stoneDark+stone;]
+[name:;collection:Mech;type:shaft_default;position:(0.0000, 0.8000, 0.0000);rotation:(270.0000, 0.0000, 0.0000);scale:(1.0000, 1.0000, 0.4000);group:;locked:False;hidden:False;materials:metalOrange+_defaultMat+dark;]
+[name:;collection:Mech;type:shaft_default;position:(0.0000, 0.8000, 0.0000);rotation:(270.0000, 180.0000, 0.0000);scale:(1.0000, 1.0000, 0.4000);group:;locked:False;hidden:False;materials:metalOrange+_defaultMat+dark;]

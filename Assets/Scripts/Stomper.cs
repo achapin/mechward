@@ -69,7 +69,7 @@ public class Stomper : MonoBehaviour
             bool pivotLeft = pivotInput < 0;
             var pivotPoint = pivotLeft ? LeftLeg : RightLeg;
             var reversed = reverseInput ? 1f : -1f;
-            var pushPoint = pivotLeft ? RightLegRestPoint : LeftLegRestPoint;
+            var pushPoint = pivotLeft ? RightLegLiftPoint : LeftLegLiftPoint;
             myRigidbody.AddForceAtPosition(pushPoint.forward * rotationForce * reversed, pushPoint.position);
             if(lifted == null)
             {

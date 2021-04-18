@@ -11,6 +11,9 @@ public class CameraFollow : MonoBehaviour
     [SerializeField]
     private Vector3 targetOffset;
 
+    [SerializeField]
+    private Vector3 targetPositionOffset;
+
     private Stomper myStomper;
 
     void Start()
@@ -24,7 +27,7 @@ public class CameraFollow : MonoBehaviour
         {
             transform.position = Vector3.Lerp(transform.position, toFollow.TransformPoint(targetOffset), .1f);
         }
-        transform.LookAt(toFollow, Vector3.up);
+        transform.LookAt(toFollow.position + targetPositionOffset, Vector3.up);
     }
 
     void OnDrawGizmos()

@@ -8,6 +8,9 @@ public class LegCollider : MonoBehaviour
     [SerializeField]
     private Transform footTransform;
 
+    [SerializeField]
+    private Transform displayTransform;
+
     private CapsuleCollider myCollider;
 
     void Start()
@@ -21,5 +24,6 @@ public class LegCollider : MonoBehaviour
         var distance = Vector3.Distance(footTransform.position, transform.position);
         myCollider.height = distance;
         myCollider.center = Vector3.down * distance * .5f;
+        displayTransform.localScale = new Vector3(1f, distance, 1f);
     }
 }
