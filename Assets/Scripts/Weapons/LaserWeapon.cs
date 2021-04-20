@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserWeapon : Weapon
+public class LaserWeapon : Weapon, BatteryLevel
 {
     [SerializeField]
     private float maxBattery;
@@ -61,5 +61,10 @@ public class LaserWeapon : Weapon
             laserLine.enabled = false;
             currentBattery = Mathf.Clamp(currentBattery + batteryChargeWhileResting * Time.deltaTime, 0f, maxBattery);
         }
+    }
+
+    public float CurrentBatteryLevel()
+    {
+        return currentBattery / maxBattery;
     }
 }
