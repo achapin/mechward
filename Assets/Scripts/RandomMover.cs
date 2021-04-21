@@ -37,7 +37,6 @@ public class RandomMover : MonoBehaviour
         {
             timeToReset -= Time.deltaTime;
         }
-        Debug.DrawLine(transform.position, targetPosition, Color.blue);
     }
 
     private void SetNewLoctation()

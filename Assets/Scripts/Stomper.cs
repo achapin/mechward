@@ -107,12 +107,18 @@ public class Stomper : MonoBehaviour
     
     public void SetPivot(InputAction.CallbackContext context)
     {
-        lastInput = context.ReadValue<float>();
+        SetInput(context.ReadValue<float>());
+    }
+
+    public void SetInput(float input) 
+    {
+        lastInput = input;
         if(IsMoving && Mathf.Abs(lastInput) <= Mathf.Epsilon)
         {
             pivotInput = 0f;
         }
     }
+    
 
     public void SetReverse(InputAction.CallbackContext context)
     {
