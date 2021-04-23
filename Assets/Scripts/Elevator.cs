@@ -48,6 +48,11 @@ public class Elevator : MonoBehaviour
 
     public void SetElevate(InputAction.CallbackContext context)
     {
-        lastInput = context.ReadValue<float>();
+        SetElevate(context.ReadValue<float>());
+    }
+    
+    public void SetElevate(float input)
+    {
+        lastInput = input;
     }
 }

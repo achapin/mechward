@@ -12,6 +12,11 @@ public class FireControl : MonoBehaviour
 
     public void SetIsFiring(InputAction.CallbackContext context)
     {
-        isFiring = context.ReadValueAsButton();
+        SetIsFiring(context.ReadValueAsButton());
+    }
+    
+    public void SetIsFiring(bool firing)
+    {
+        isFiring = firing;
     }
 }

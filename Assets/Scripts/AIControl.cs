@@ -11,7 +11,15 @@ public class AIControl : MonoBehaviour
     [SerializeField]
     private Transform rabbit;
 
+    [SerializeField]
+    private float liftDot;
+
+    [SerializeField]
+    private float closestDistance;
+
     private Stomper stomper;
+    private Elevator elevator;
+    private FireControl fireControl;
 
     private bool pivotRight;
     private bool shouldPivotRight;
@@ -22,40 +30,67 @@ public class AIControl : MonoBehaviour
 
     private float lastAngle;
 
+    private bool canSeeTarget;
+
     void Start()
     {
         stomper = GetComponent<Stomper>();    
+        elevator = GetComponentInChildren<Elevator>();
+        fireControl = GetComponent<FireControl>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        /*
-        var pingPongVal = 1f - Mathf.PingPong(Time.time, 2f);
-        if(Mathf.Abs(pingPongVal) < .3f)
+        CheckCanSeeTarget();
+        UpdateMovement();
+        UpdateTargeting();
+    }
+
+    void CheckCanSeeTarget()
+    {
+        Color connectColor = Color.red;
+        if(Physics.Raycast(transform.position, target.transform.position - transform.position, out RaycastHit hitinfo))
         {
-            pingPongVal = 0f;
-        }else{
-            pingPongVal = Mathf.Sign(pingPongVal);
+            var checkObject = hitinfo.collider?.gameObject;
+            while(checkObject != target.gameObject && checkObject != null)
+            {
+                checkObject = checkObject.transform.parent?.gameObject;
+            }
+            if(checkObject != target.gameObject)
+            {
+                stomper.SetInput(0f);
+                Debug.DrawLine(target.transform.position, transform.position, connectColor);
+                canSeeTarget = false;
+                return;
+            }
+            connectColor = Color.green;
         }
-        stomper.SetInput(pingPongVal);
-        */
-        
-        /*
-        Vector3 flatTargetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
-        Vector3 flatMyPos = new Vector3(transform.position.x, 0f, transform.position.z);
-        Vector3 targetLine = flatTargetPos - flatMyPos;
+        Debug.DrawLine(target.transform.position, transform.position, connectColor);
+        canSeeTarget = true;
+    }
 
-        var targetDist = targetLine.magnitude;
-
-        var angle = Mathf.Atan2(oppositeLength, targetDist);
-
-        var hypLength = oppositeLength * Mathf.Cos(angle);
-        //rotationTarget = new Vector3(Mathf.Cos(angle) * oppositeLength, 0f, Mathf.Sin(angle) * targetLine.magnitude);
-        */
+    private void UpdateMovement()
+    {
+        if(Vector3.Dot(transform.up, Vector3.up) < liftDot)
+        {
+            stomper.SetInput(0f);
+            return;
+        }
 
         if(countdown > 0f){
             countdown -= Time.deltaTime;
+            stomper.SetInput(0f);
+            return;
+        }
+
+        if(!canSeeTarget)
+        {
+            stomper.SetInput(0f);
+            return;
+        }
+
+        if(Vector3.Distance(target.transform.position, transform.position) <= closestDistance)
+        {
             stomper.SetInput(0f);
             return;
         }
@@ -85,8 +120,27 @@ public class AIControl : MonoBehaviour
 
 
         Debug.DrawLine(target.transform.position, rotationTarget, Color.blue);
-        Debug.DrawLine(transform.position, rotationTarget, Color.red);
-        Debug.DrawLine(target.transform.position, transform.position, Color.green);
-        
+        Debug.DrawLine(transform.position, rotationTarget, Color.yellow);       
+    }
+
+    private void UpdateTargeting()
+    {
+        if(!canSeeTarget)
+        {
+            fireControl.SetIsFiring(false);
+            return;
+        }
+
+        Vector3 targetPoint = elevator.transform.InverseTransformPoint(target.transform.position);
+
+        if(Mathf.Abs(targetPoint.y) < 2f)
+        {
+            fireControl.SetIsFiring(true);
+        }
+        else
+        {
+            fireControl.SetIsFiring(false);
+            elevator.SetElevate(-Mathf.Sign(targetPoint.y));
+        }
     }
 }

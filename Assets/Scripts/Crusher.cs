@@ -14,12 +14,15 @@ public class Crusher : MonoBehaviour
 
     private bool doCrush;
 
+    private MechHealth parent;
+
     private List<Damageable> damagedAlready = new List<Damageable>();
 
     void Start()
     {
         myCollider = GetComponent<BoxCollider>();
         lastPos = transform.localPosition;
+        parent = GetComponentInParent<MechHealth>();
     }
 
     void FixedUpdate()
@@ -45,6 +48,13 @@ public class Crusher : MonoBehaviour
             {
                 if(!damagedAlready.Contains(damageable))
                 {
+                    if(damageable is ComponentTarget ct)
+                    {
+                        if(ct.Mech == parent)
+                        {
+                            continue;
+                        }
+                    }
                     damageable.TakeDamage(damageOnCrush);
                     damagedAlready.Add(damageable);
                 }

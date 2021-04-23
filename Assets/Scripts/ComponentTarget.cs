@@ -6,6 +6,8 @@ public class ComponentTarget : Damageable
 {
     
     private MechHealth parent;
+
+    public MechHealth Mech => parent;
     
     void Start()
     {
