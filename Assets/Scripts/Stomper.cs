@@ -100,6 +100,11 @@ public class Stomper : MonoBehaviour
         }
     }
 
+    void OnDisable()
+    {
+        SetInput(0f);
+    }
+
     public bool ShouldFollow ()
     {
         return !IsMoving;
