@@ -19,10 +19,7 @@ public class PlayerMechHealth : MechHealth
             disableCount -= Time.deltaTime;
             if(disableCount <= 0f)
             {
-                foreach(var component in disableWhenShutdown)
-                {
-                    component.enabled = true;
-                }
+                EnableMech();
                 currentHealth = maxHealth;
             }
         }
@@ -30,16 +27,29 @@ public class PlayerMechHealth : MechHealth
 
     protected override void OnDestroy()
     {
-        if(disableTime > 0f)
+        if(disableCount > 0f)
         {
             Debug.Log("SKIPPING ONDESTROY BECAUSE WE ARE DESTROYED");
             return;
         }
         disableCount = disableTime;
+        DisableMech();
+    }
+
+    public void DisableMech()
+    {
         foreach(var component in disableWhenShutdown)
         {
             Debug.Log($"{component.name} disabked");
             component.enabled = false;
+        }
+    }
+
+    public void EnableMech()
+    {
+        foreach(var component in disableWhenShutdown)
+        {
+            component.enabled = true;
         }
     }
 }

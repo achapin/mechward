@@ -8,7 +8,7 @@ public class FireControl : MonoBehaviour
 
     private bool isFiring;
 
-    public bool IsFiring => isFiring;
+    public bool IsFiring => enabled && isFiring;
 
     void OnDisable()
     {
